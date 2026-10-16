@@ -6,10 +6,9 @@
 // - `App` garde en mémoire :
 //   1. `activeStep` : le numéro de l'étape affichée à l'écran (de 1 à 6).
 //   2. `completedSteps` : la liste des étapes que tu as déjà validées,
-//      sauvegardée dans le `localStorage` du navigateur pour ne rien perdre
-//      si tu rafraîchis la page !
-// - Selon la valeur de `activeStep`, il affiche le composant correspondant :
-//   `Step1Semantics`, `Step2FlexboxLab`, `Step3Specificity`, etc.
+//      sauvegardée dans le `localStorage` du navigateur.
+//   3. `theme` : le thème de couleur ('dark' par défaut, ou 'light' si tu
+//      cliques sur le bouton Soleil/Lune en haut à droite !).
 // ============================================================================
 
 import React, { useState, useEffect } from 'react';
@@ -30,7 +29,16 @@ export default function App() {
   // 1. Étape actuellement sélectionnée (1 par défaut)
   const [activeStep, setActiveStep] = useState(1);
 
-  // 2. Étapes terminées (chargées depuis localStorage au démarrage)
+  // 2. Thème visuel : 'dark' (Mode Sombre) par défaut, avec option 'light' (Mode Clair)
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem('tag_booki_theme') || 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
+
+  // 3. Étapes terminées (chargées depuis localStorage au démarrage)
   const [completedSteps, setCompletedSteps] = useState(() => {
     try {
       const saved = localStorage.getItem('tag_booki_completed_steps');
@@ -40,8 +48,22 @@ export default function App() {
     }
   });
 
-  // 3. État pour ouvrir ou fermer la modale "Comment ce site est codé en React ?"
+  // 4. État pour ouvrir ou fermer la modale "Comment ce site est codé en React ?"
   const [reactModalOpen, setReactModalOpen] = useState(false);
+
+  // Synchronise l'attribut `data-theme` sur la balise <html> et sauvegarde le choix dans localStorage
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    const metaScheme = document.querySelector('meta[name="color-scheme"]');
+    if (metaScheme) {
+      metaScheme.setAttribute('content', theme);
+    }
+    try {
+      localStorage.setItem('tag_booki_theme', theme);
+    } catch {
+      // Ignore si localStorage est bloqué
+    }
+  }, [theme]);
 
   // Sauvegarde automatique dans localStorage à chaque fois que completedSteps change
   useEffect(() => {
@@ -55,12 +77,17 @@ export default function App() {
     }
   }, [completedSteps]);
 
+  // Fonction pour basculer entre Dark Mode et Light Mode
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
   // Fonction appelée quand Tag clique sur le bouton "Valider l'étape"
   const handleCompleteStep = (stepId) => {
     if (!completedSteps.includes(stepId)) {
       setCompletedSteps((prev) => [...prev, stepId]);
     }
-    // Lance une pluie de confettis aux couleurs de Booki (#0065FC et #DEEBFF) !
+    // Lance une pluie de confettis aux couleurs de Booki (#0065FC et #38bdf8) !
     confetti({
       particleCount: 70,
       spread: 65,
@@ -82,7 +109,7 @@ export default function App() {
   );
 
   return (
-    <div className="app-shell">
+    <div className="app-shell" data-theme={theme}>
       {/* =====================================================================
           EN-TÊTE PRINCIPAL (NAVIGATION & BARRE DE PROGRESSION)
       ===================================================================== */}
@@ -94,7 +121,7 @@ export default function App() {
             </div>
             <div>
               <div className="brand-kicker">
-                 Parcours Intensif 60 min • Préparation Soutenance HTML/CSS
+                Parcours Intensif 60 min • Préparation Soutenance HTML/CSS
               </div>
               <h1 className="brand-title">
                 L&apos;Atelier Interactif de <span>Tag</span>
@@ -118,6 +145,20 @@ export default function App() {
                 />
               </div>
             </div>
+
+            {/* BOUTON DE BASCULE DARK MODE / LIGHT MODE */}
+            <button
+              type="button"
+              className="nav-action-btn theme-toggle-btn"
+              onClick={toggleTheme}
+              title="Basculer entre le Mode Sombre et le Mode Clair"
+            >
+              <i
+                className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}
+                aria-hidden="true"
+              ></i>
+              <span>{theme === 'dark' ? 'Mode Clair' : 'Mode Sombre'}</span>
+            </button>
 
             <a
               href={FIGMA_URL}

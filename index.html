@@ -1,8 +1,18 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Déclare le support natif du Dark Mode (par défaut) et du Light Mode -->
+    <meta name="color-scheme" content="dark light" />
+    <script>
+      // Applique immédiatement le thème sauvegardé (ou 'dark' par défaut) avant le rendu pour éviter tout flash blanc
+      try {
+        const savedTheme = localStorage.getItem('tag_booki_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.querySelector('meta[name="color-scheme"]').content = savedTheme;
+      } catch (e) {}
+    </script>
     <title>Booki Masterclass — L'Atelier Interactif de Tag</title>
     <!-- Police Raleway (celle du projet Booki !) + Plus Jakarta Sans & JetBrains Mono pour le code -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
