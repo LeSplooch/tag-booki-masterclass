@@ -4,16 +4,15 @@
 //
 // 🎓 COURS REACT POUR TAG :
 // - Ce composant montre comment gérer un champ de saisie contrôlé (`<input>`)
-//   en React : la valeur du champ est stockée dans `customSelector` via `useState`,
-//   et chaque frappe au clavier déclenche `onChange={(e) => setCustomSelector(e.target.value)}`.
-// - Dès que `customSelector` change, notre fonction `calculateSpecificity()`
-//   recalcule instantanément le score [Inline, ID, Classe, Balise] !
+//   en React : la valeur du champ est stockée dans `customSelector` via `useState`.
+// - Tous les extraits de code petits et grands sont rendus dans des blocs
+//   colorés grâce à `<CodeBlock />` et `<RichCodeText />` !
 // ============================================================================
 
 import React, { useState } from 'react';
 import { SPECIFICITY_BATTLES } from '../data/courseData';
+import { CodeBlock, RichCodeText } from './CodeHighlighter';
 
-// Liste de vrais sélecteurs extraits du fichier style.css de Tag
 const TAG_SELECTORS_PRESETS = [
   {
     selector: '*',
@@ -57,19 +56,15 @@ const TAG_SELECTORS_PRESETS = [
   },
 ];
 
-// Petite fonction pédagogique qui calcule la spécificité d'un sélecteur CSS simple
 function computeCssSpecificity(rawSelector) {
   const cleaned = rawSelector.trim();
   if (!cleaned || cleaned === '*') {
     return [0, 0, 0, 0];
   }
-  // Compte les #id
   const idMatches = cleaned.match(/#[a-zA-Z0-9_-]+/g) || [];
-  // Compte les .classes et :pseudo-classes (hors ::pseudo-elements)
   const classMatches = cleaned.match(/\.[a-zA-Z0-9_-]+/g) || [];
   const pseudoClassMatches =
     cleaned.replace(/::[a-zA-Z-]+/g, '').match(/:[a-zA-Z-]+/g) || [];
-  // Enlève les #id, .class, :pseudo et caractères spéciaux pour compter les balises HTML
   const withoutIdsClasses = cleaned
     .replace(/#[a-zA-Z0-9_-]+/g, ' ')
     .replace(/\.[a-zA-Z0-9_-]+/g, ' ')
@@ -90,16 +85,11 @@ function computeCssSpecificity(rawSelector) {
 }
 
 export default function Step3Specificity({ isCompleted, onCompleteStep }) {
-  // Sélecteur actuellement inspecté dans le calculateur
   const [selectedPreset, setSelectedPreset] = useState(
     TAG_SELECTORS_PRESETS[7]
   );
   const [customSelector, setCustomSelector] = useState('#menu li:hover');
-
-  // État pour le correcteur interactif du bug ligne 494 (#menu .li:hover)
   const [line494Fixed, setLine494Fixed] = useState(false);
-
-  // État pour les choix de Tag dans les 3 duels de spécificité
   const [battlePicks, setBattlePicks] = useState({});
 
   const tuple = computeCssSpecificity(customSelector);
@@ -120,9 +110,13 @@ export default function Step3Specificity({ isCompleted, onCompleteStep }) {
             C&apos;est l&apos;une des questions préférées de Sarah à l&apos;oral !
             Quand deux règles CSS ciblent le même élément HTML, le navigateur
             calcule un <strong>score de priorité</strong> sur 4 colonnes :{' '}
-            <code>(Style Inline, #ID, .Classe / :pseudo, Balise)</code>. Et en cas
-            d&apos;égalité parfaite ? C&apos;est <strong>la dernière règle écrite</strong>{' '}
-            tout en bas du fichier <code>style.css</code> qui gagne (la Cascade) !
+            <code className="code-pill pill-selector">
+              (Style Inline, #ID, .Classe / :pseudo, Balise)
+            </code>
+            . Et en cas d&apos;égalité parfaite ? C&apos;est{' '}
+            <strong>la dernière règle écrite</strong> tout en bas du fichier{' '}
+            <code className="code-pill pill-file">style.css</code> qui gagne (la
+            Cascade) !
           </p>
         </div>
 
@@ -130,17 +124,17 @@ export default function Step3Specificity({ isCompleted, onCompleteStep }) {
           <div className="podium-tier tier-id">
             <strong>100 pts</strong>
             <span>#ID</span>
-            <code>#menu, #filter</code>
+            <code className="code-pill pill-selector">#menu, #filter</code>
           </div>
           <div className="podium-tier tier-class">
             <strong>10 pts</strong>
             <span>.Classe &amp; :pseudo</span>
-            <code>.card, :hover, :required</code>
+            <code className="code-pill pill-selector">.card, :hover, :required</code>
           </div>
           <div className="podium-tier tier-tag">
             <strong>1 pt</strong>
             <span>Balise HTML</span>
-            <code>header, li, a, img</code>
+            <code className="code-pill pill-html">header, li, a, img</code>
           </div>
         </div>
       </div>
@@ -154,7 +148,10 @@ export default function Step3Specificity({ isCompleted, onCompleteStep }) {
             <span className="panel-kicker">
               Atelier 1 • Analyseur de tes propres sélecteurs CSS
             </span>
-            <h3>Clique sur un sélecteur de ton style.css (ou tape le tien)</h3>
+            <h3>
+              Clique sur un sélecteur de ton{' '}
+              <code className="code-pill pill-file">style.css</code> (ou tape le tien)
+            </h3>
           </div>
         </div>
 
@@ -171,7 +168,7 @@ export default function Step3Specificity({ isCompleted, onCompleteStep }) {
                 setCustomSelector(item.selector);
               }}
             >
-              <code>{item.selector}</code>
+              <code className="code-pill pill-selector">{item.selector}</code>
               <small>{item.line}</small>
             </button>
           ))}
@@ -194,7 +191,7 @@ export default function Step3Specificity({ isCompleted, onCompleteStep }) {
               <p className="preset-desc-note">
                 <i className="fa-solid fa-circle-info" aria-hidden="true"></i>{' '}
                 <strong>{selectedPreset.line} de ton style.css :</strong>{' '}
-                {selectedPreset.desc}
+                <RichCodeText text={selectedPreset.desc} />
               </p>
             )}
           </div>
@@ -203,22 +200,22 @@ export default function Step3Specificity({ isCompleted, onCompleteStep }) {
             <div className="tuple-card inline-col">
               <span className="tuple-num">{tuple[0]}</span>
               <strong>Style Inline</strong>
-              <small>style=&quot;...&quot;</small>
+              <code className="code-pill pill-attr">style=&quot;...&quot;</code>
             </div>
             <div className="tuple-card id-col">
               <span className="tuple-num">{tuple[1]}</span>
               <strong>#ID (×100)</strong>
-              <small>#menu, #search</small>
+              <code className="code-pill pill-selector">#menu, #search</code>
             </div>
             <div className="tuple-card class-col">
               <span className="tuple-num">{tuple[2]}</span>
               <strong>.Classe / :pseudo (×10)</strong>
-              <small>.card, :hover</small>
+              <code className="code-pill pill-selector">.card, :hover</code>
             </div>
             <div className="tuple-card tag-col">
               <span className="tuple-num">{tuple[3]}</span>
               <strong>Balise (×1)</strong>
-              <small>header, li, img</small>
+              <code className="code-pill pill-html">header, li, img</code>
             </div>
           </div>
         </div>
@@ -234,8 +231,9 @@ export default function Step3Specificity({ isCompleted, onCompleteStep }) {
               Atelier 2 • Découverte importante dans ton fichier style.css !
             </span>
             <h3>
-              Le petit piège de la ligne 494 : <code>#menu .li:hover</code> vs{' '}
-              <code>#menu li:hover</code>
+              Le petit piège de la ligne 494 :{' '}
+              <code className="code-pill pill-selector">#menu .li:hover</code> vs{' '}
+              <code className="code-pill pill-selector">#menu li:hover</code>
             </h3>
           </div>
           <button
@@ -243,55 +241,70 @@ export default function Step3Specificity({ isCompleted, onCompleteStep }) {
             className={`btn-preset ${line494Fixed ? 'success' : 'danger'}`}
             onClick={() => setLine494Fixed(!line494Fixed)}
           >
-            {line494Fixed
-              ? '✅ Corrigé : #menu li:hover (Sans le point !)'
-              : '🔧 Cliquer pour corriger le point devant .li'}
+            {line494Fixed ? (
+              <>
+                ✅ Corrigé : <code className="code-pill pill-selector">#menu li:hover</code>
+              </>
+            ) : (
+              <>
+                🔧 Cliquer pour corriger le point devant{' '}
+                <code className="code-pill pill-selector">.li</code>
+              </>
+            )}
           </button>
         </div>
 
         <div className="bug494-split">
           <div className="bug494-explanation">
             <p>
-              Regarde bien ton fichier <code>css/style.css</code> :
+              Regarde bien ton fichier{' '}
+              <code className="code-pill pill-file">css/style.css</code> :
             </p>
             <ul className="clean-bullet-list">
               <li>
                 <strong>Ligne 88 (Desktop) :</strong> tu as écrit{' '}
-                <code>#menu li:hover</code> (sans point). Cela cible bien les
-                balises <code>&lt;li&gt;</code> situées dans <code>#menu</code>.
+                <code className="code-pill pill-selector">#menu li:hover</code> (sans
+                point). Cela cible bien les balises{' '}
+                <code className="code-pill pill-html">&lt;li&gt;</code> situées dans{' '}
+                <code className="code-pill pill-selector">#menu</code>.
               </li>
               <li>
                 <strong>Ligne 494 (Mobile) :</strong> tu as écrit{' '}
-                <code>#menu .li:hover</code> avec un <strong>point</strong> devant{' '}
-                <code>li</code> !
+                <code className="code-pill pill-selector">#menu .li:hover</code> avec
+                un <strong>point</strong> devant{' '}
+                <code className="code-pill pill-selector">.li</code> !
               </li>
               <li>
                 <strong>Conséquence :</strong> en CSS, un point signifie{' '}
-                <em>&laquo; cherche un élément qui possède class=&quot;li&quot; &raquo;</em>.
-                Or tes <code>&lt;li&gt;</code> n&apos;ont pas de classe{' '}
-                <code>class=&quot;li&quot;</code> !
+                <em>
+                  « cherche un élément qui possède{' '}
+                  <code className="code-pill pill-attr">class=&quot;li&quot;</code> »
+                </em>
+                . Or tes <code className="code-pill pill-html">&lt;li&gt;</code>{' '}
+                n&apos;ont pas de classe{' '}
+                <code className="code-pill pill-attr">class=&quot;li&quot;</code> !
               </li>
             </ul>
 
             <div className="code-comparison-row">
-              <div className="code-box bad">
-                <div className="code-box-title">❌ Ligne 494 actuelle</div>
-                <pre>
-                  <code>{`#menu .li:hover {
+              <CodeBlock
+                title="❌ Ligne 494 actuelle (Point en trop)"
+                lang="CSS"
+                variant="bad"
+                code={`#menu .li:hover {
   border-color: #0065FC;
   color: #0065FC;
-}`}</code>
-                </pre>
-              </div>
-              <div className="code-box good">
-                <div className="code-box-title">✅ Ligne 494 corrigée</div>
-                <pre>
-                  <code>{`#menu li:hover {
+}`}
+              />
+              <CodeBlock
+                title="✅ Ligne 494 corrigée (Sans point)"
+                lang="CSS"
+                variant="good"
+                code={`#menu li:hover {
   border-color: #0065FC;
   color: #0065FC;
-}`}</code>
-                </pre>
-              </div>
+}`}
+              />
             </div>
           </div>
 
@@ -315,9 +328,13 @@ export default function Step3Specificity({ isCompleted, onCompleteStep }) {
                 <li>Activités</li>
               </ul>
               <p className="sim-status-note">
-                {line494Fixed
-                  ? '🎉 Bravo ! Sans le point (.li -> li), la bordure grise en bas devient bien bleue (#0065FC) au survol sur mobile !'
-                  : '⚠️ Avec #menu .li:hover, la bordure du bas reste grise (#F2F2F2) sur mobile car aucune balise n’a class="li". Clique sur le bouton en haut à droite pour corriger !'}
+                <RichCodeText
+                  text={
+                    line494Fixed
+                      ? '🎉 Bravo ! Avec `#menu li:hover`, la bordure grise en bas devient bien bleue `#0065FC` au survol sur mobile !'
+                      : '⚠️ Avec `#menu .li:hover`, la bordure du bas reste grise `#F2F2F2` sur mobile car aucune balise n’a `class="li"`.'
+                  }
+                />
               </p>
             </div>
           </div>
@@ -343,7 +360,9 @@ export default function Step3Specificity({ isCompleted, onCompleteStep }) {
             return (
               <div className="challenge-card" key={battle.id}>
                 <div className="challenge-number">{battle.title}</div>
-                <p className="challenge-q">{battle.context}</p>
+                <p className="challenge-q">
+                  <RichCodeText text={battle.context} />
+                </p>
 
                 <div className="duel-buttons">
                   {['A', 'B'].map((letter) => {
@@ -369,7 +388,7 @@ export default function Step3Specificity({ isCompleted, onCompleteStep }) {
                       >
                         <span className="option-letter">{letter}</span>
                         <div className="duel-code-wrap">
-                          <code>{sel.code}</code>
+                          <code className="code-pill pill-selector">{sel.code}</code>
                           {picked && (
                             <small className="duel-score-tag">
                               Score : ({sel.tuple.join(', ')}) — {sel.explanation}
@@ -395,7 +414,9 @@ export default function Step3Specificity({ isCompleted, onCompleteStep }) {
                       }`}
                       aria-hidden="true"
                     ></i>
-                    <span>{battle.why}</span>
+                    <span>
+                      <RichCodeText text={battle.why} />
+                    </span>
                   </div>
                 )}
               </div>

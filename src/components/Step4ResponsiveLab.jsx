@@ -13,6 +13,7 @@
 // ============================================================================
 
 import React, { useState } from 'react';
+import { CodeBlock, RichCodeText } from './CodeHighlighter';
 
 const VIEWPORTS = [
   {
@@ -94,8 +95,10 @@ export default function Step4ResponsiveLab({ isCompleted, onCompleteStep }) {
             Sarah ton site en <strong>Desktop</strong>, <strong>Tablette (1024px)</strong>{' '}
             et <strong>Mobile (&lt; 768px)</strong>. Ton approche est{' '}
             <strong>Desktop-First</strong> : tu as codé le style ordinateur par
-            défaut, puis ajouté deux <code>@media (max-width: ...)</code> à la fin
-            de ton fichier <code>style.css</code>.
+            défaut, puis ajouté deux{' '}
+            <code className="code-pill pill-selector">@media (max-width: ...)</code>{' '}
+            à la fin de ton fichier{' '}
+            <code className="code-pill pill-file">style.css</code>.
           </p>
         </div>
 
@@ -106,11 +109,19 @@ export default function Step4ResponsiveLab({ isCompleted, onCompleteStep }) {
           </div>
           <div className="bp-pill tablet">
             <strong>Tablette</strong>
-            <span>@media (max-width: 1024px)</span>
+            <span>
+              <code className="code-pill pill-selector">
+                @media (max-width: 1024px)
+              </code>
+            </span>
           </div>
           <div className="bp-pill mobile">
             <strong>Mobile</strong>
-            <span>@media (max-width: 767.98px)</span>
+            <span>
+              <code className="code-pill pill-selector">
+                @media (max-width: 767.98px)
+              </code>
+            </span>
           </div>
         </div>
       </div>
@@ -125,7 +136,8 @@ export default function Step4ResponsiveLab({ isCompleted, onCompleteStep }) {
               Atelier 1 • Les 2 points techniques complexes à montrer à Sarah
             </span>
             <h3>
-              Manipule tes 2 meilleures astuces Mobile (Lignes 524–557 de style.css)
+              Manipule tes 2 meilleures astuces Mobile (Lignes 524–557 de{' '}
+              <code className="code-pill pill-file">style.css</code>)
             </h3>
           </div>
         </div>
@@ -150,13 +162,17 @@ export default function Step4ResponsiveLab({ isCompleted, onCompleteStep }) {
               toucher au HTML
             </h4>
             <p>
-              Dans ton <code>index.html</code>, la section{' '}
-              <code>.hebergements</code> est écrite <strong>avant</strong>{' '}
-              <code>.populaires</code>. Mais sur la maquette mobile de Loïc,{' '}
-              <strong>Populaires</strong> doit être tout en haut ! En mettant{' '}
-              <code>order: 2</code> sur <code>.hebergements</code>, elle passe
-              après <code>.populaires</code> (qui vaut <code>order: 0</code> par
-              défaut).
+              Dans ton <code className="code-pill pill-file">index.html</code>, la
+              section <code className="code-pill pill-selector">.hebergements</code>{' '}
+              est écrite <strong>avant</strong>{' '}
+              <code className="code-pill pill-selector">.populaires</code>. Mais sur
+              la maquette mobile de Loïc, <strong>Populaires</strong> doit être tout
+              en haut ! En mettant{' '}
+              <code className="code-pill pill-css-prop">order: 2</code> sur{' '}
+              <code className="code-pill pill-selector">.hebergements</code>, elle
+              passe après{' '}
+              <code className="code-pill pill-selector">.populaires</code> (qui vaut{' '}
+              <code className="code-pill pill-css-prop">order: 0</code> par défaut).
             </p>
 
             <div className="order-demo-stage">
@@ -172,19 +188,31 @@ export default function Step4ResponsiveLab({ isCompleted, onCompleteStep }) {
                   className="order-demo-child heb"
                   style={{
                     order: mobileOrderActive ? 2 : 0,
-                    background: mobileOrderActive ? '#ffffff' : '#F2F2F2',
                   }}
                 >
                   <div>
-                    <strong>1er dans le HTML : &lt;section class=&quot;hebergements&quot;&gt;</strong>
+                    <strong>
+                      1er dans le HTML :{' '}
+                      <code className="code-pill pill-html">
+                        &lt;section class=&quot;hebergements&quot;&gt;
+                      </code>
+                    </strong>
                     <small>
                       Fond :{' '}
-                      {mobileOrderActive
-                        ? 'transparent (blanc sur mobile)'
-                        : 'gris #F2F2F2'}
+                      {mobileOrderActive ? (
+                        <code className="code-pill pill-css-prop">
+                          background-color: transparent
+                        </code>
+                      ) : (
+                        <code className="code-pill pill-css-prop">
+                          background-color: #F2F2F2
+                        </code>
+                      )}
                     </small>
                   </div>
-                  <code>order: {mobileOrderActive ? '2' : '0'}</code>
+                  <code className="code-pill pill-css-prop">
+                    order: {mobileOrderActive ? '2' : '0'}
+                  </code>
                 </div>
 
                 <div
@@ -194,10 +222,19 @@ export default function Step4ResponsiveLab({ isCompleted, onCompleteStep }) {
                   }}
                 >
                   <div>
-                    <strong>2e dans le HTML : &lt;section class=&quot;populaires&quot;&gt;</strong>
-                    <small>Garde son fond gris #F2F2F2 sur mobile</small>
+                    <strong>
+                      2e dans le HTML :{' '}
+                      <code className="code-pill pill-html">
+                        &lt;section class=&quot;populaires&quot;&gt;
+                      </code>
+                    </strong>
+                    <small>
+                      Garde son fond gris{' '}
+                      <code className="code-pill pill-css-prop">#F2F2F2</code> sur
+                      mobile
+                    </small>
                   </div>
-                  <code>order: 0 (défaut)</code>
+                  <code className="code-pill pill-css-prop">order: 0 (défaut)</code>
                 </div>
               </div>
             </div>
@@ -222,12 +259,18 @@ export default function Step4ResponsiveLab({ isCompleted, onCompleteStep }) {
               Mobile
             </h4>
             <p>
-              Dans ton <code>index.html</code> (lignes 36–39), le{' '}
-              <code>&lt;button&gt;</code> contient <strong>à la fois</strong>{' '}
-              l&apos;icône <code>.fa-magnifying-glass</code> et le{' '}
-              <code>&lt;span class=&quot;button-text&quot;&gt;Rechercher&lt;/span&gt;</code>.
-              Tu joues simplement avec <code>display: none</code> et{' '}
-              <code>display: block</code> !
+              Dans ton <code className="code-pill pill-file">index.html</code>{' '}
+              (lignes 36–39), le{' '}
+              <code className="code-pill pill-html">&lt;button&gt;</code> contient{' '}
+              <strong>à la fois</strong> l&apos;icône{' '}
+              <code className="code-pill pill-selector">.fa-magnifying-glass</code>{' '}
+              et le{' '}
+              <code className="code-pill pill-html">
+                &lt;span class=&quot;button-text&quot;&gt;Rechercher&lt;/span&gt;
+              </code>
+              . Tu joues simplement avec{' '}
+              <code className="code-pill pill-css-prop">display: none</code> et{' '}
+              <code className="code-pill pill-css-prop">display: block</code> !
             </p>
 
             <div className="search-demo-stage">
@@ -255,19 +298,25 @@ export default function Step4ResponsiveLab({ isCompleted, onCompleteStep }) {
                 </button>
               </div>
 
-              <div className="code-preview-block compact">
-                <pre>
-                  <code>
-                    {mobileSearchMode
-                      ? `/* Mobile (@media max-width: 767.98px) */
+              <CodeBlock
+                title={
+                  mobileSearchMode
+                    ? 'css/style.css — Mobile (@media max-width: 767.98px)'
+                    : 'css/style.css — Desktop (Par défaut, ligne 143)'
+                }
+                lang="CSS"
+                variant="compact"
+                showLineNumbers={false}
+                code={
+                  mobileSearchMode
+                    ? `/* Mobile (@media max-width: 767.98px) */
 .button-text { display: none; }
 .fa-magnifying-glass { display: block; border-radius: 15px; }`
-                      : `/* Desktop (Par défaut, ligne 143) */
+                    : `/* Desktop (Par défaut, ligne 143) */
 .button-text { display: inline; }
-.fa-magnifying-glass { display: none; }`}
-                  </code>
-                </pre>
-              </div>
+.fa-magnifying-glass { display: none; }`
+                }
+              />
             </div>
           </div>
         </div>
@@ -312,11 +361,15 @@ export default function Step4ResponsiveLab({ isCompleted, onCompleteStep }) {
         <div className="vp-changes-banner">
           <div className="vp-rule-badge">
             <i className="fa-solid fa-code" aria-hidden="true"></i>
-            <strong>{currentVp.breakpointRule}</strong>
+            <strong>
+              <RichCodeText text={currentVp.breakpointRule} />
+            </strong>
           </div>
           <ul className="vp-highlights-list">
             {currentVp.highlights.map((h) => (
-              <li key={h}>{h}</li>
+              <li key={h}>
+                <RichCodeText text={h} />
+              </li>
             ))}
           </ul>
         </div>

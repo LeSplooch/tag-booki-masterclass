@@ -15,6 +15,11 @@ import {
   CODE_WALKTHROUGH_SECTIONS,
   W3C_AUDIT_ITEMS,
 } from '../data/courseData';
+import {
+  CodeBlock,
+  RichCodeText,
+  highlightCodeLine,
+} from './CodeHighlighter';
 
 export default function Step5CodeExplorer({ isCompleted, onCompleteStep }) {
   // Chapitre actif dans l'explorateur guidé ligne par ligne
@@ -70,9 +75,11 @@ export default function Step5CodeExplorer({ isCompleted, onCompleteStep }) {
           </h2>
           <p>
             Lors de la soutenance, Sarah va te demander d&apos;ouvrir ton code dans
-            VS Code et de lui expliquer pourquoi tu as écrit telle ou telle ligne.
-            Explore ci-dessous les <strong>5 chapitres de ton propre code</strong>{' '}
-            ainsi que les <strong>4 remarques W3C / Qualité</strong> qui
+            VS Code (<code className="code-pill pill-file">index.html</code> et{' '}
+            <code className="code-pill pill-file">style.css</code>) et de lui
+            expliquer pourquoi tu as écrit telle ou telle ligne. Explore
+            ci-dessous les <strong>5 chapitres de ton propre code</strong> ainsi
+            que les <strong>4 remarques W3C / Qualité</strong> qui
             impressionneront ton évaluateur !
           </p>
         </div>
@@ -115,29 +122,17 @@ export default function Step5CodeExplorer({ isCompleted, onCompleteStep }) {
 
         <div className="walkthrough-stage">
           <div className="walkthrough-codes-row">
-            <div className="code-preview-block">
-              <div className="code-preview-header">
-                <span>
-                  <i className="fa-brands fa-html5" aria-hidden="true"></i>{' '}
-                  {currentChapter.linesHtml}
-                </span>
-              </div>
-              <pre tabIndex="0">
-                <code>{currentChapter.htmlCode}</code>
-              </pre>
-            </div>
+            <CodeBlock
+              title={currentChapter.linesHtml}
+              lang="HTML5"
+              code={currentChapter.htmlCode}
+            />
 
-            <div className="code-preview-block">
-              <div className="code-preview-header">
-                <span>
-                  <i className="fa-brands fa-css3-alt" aria-hidden="true"></i>{' '}
-                  {currentChapter.linesCss}
-                </span>
-              </div>
-              <pre tabIndex="0">
-                <code>{currentChapter.cssCode}</code>
-              </pre>
-            </div>
+            <CodeBlock
+              title={currentChapter.linesCss}
+              lang="CSS3"
+              code={currentChapter.cssCode}
+            />
           </div>
 
           <div className="line-by-line-cards">
@@ -148,8 +143,14 @@ export default function Step5CodeExplorer({ isCompleted, onCompleteStep }) {
             <div className="lbl-grid">
               {currentChapter.lineByLine.map((item) => (
                 <div className="lbl-item" key={item.code}>
-                  <code className="lbl-code">{item.code}</code>
-                  <p>{item.meaning}</p>
+                  <div className="lbl-code-box">
+                    <span className="lbl-code-tokens">
+                      {highlightCodeLine(item.code)}
+                    </span>
+                  </div>
+                  <p>
+                    <RichCodeText text={item.meaning} />
+                  </p>
                 </div>
               ))}
             </div>
@@ -197,22 +198,28 @@ export default function Step5CodeExplorer({ isCompleted, onCompleteStep }) {
                   </button>
                 </div>
 
-                <h4>{item.title}</h4>
-                <p className="audit-exp">{item.explanation}</p>
+                <h4>
+                  <RichCodeText text={item.title} />
+                </h4>
+                <p className="audit-exp">
+                  <RichCodeText text={item.explanation} />
+                </p>
 
                 <div className="code-comparison-row">
-                  <div className="code-box bad">
-                    <div className="code-box-title">Dans ton fichier actuel</div>
-                    <pre>
-                      <code>{item.wrongCode}</code>
-                    </pre>
-                  </div>
-                  <div className="code-box good">
-                    <div className="code-box-title">Version optimisée W3C</div>
-                    <pre>
-                      <code>{item.fixedCode}</code>
-                    </pre>
-                  </div>
+                  <CodeBlock
+                    title="⚠️ Dans ton fichier actuel"
+                    lang="Actuel"
+                    variant="bad"
+                    showLineNumbers={false}
+                    code={item.wrongCode}
+                  />
+                  <CodeBlock
+                    title="✅ Version optimisée W3C"
+                    lang="Corrigé"
+                    variant="good"
+                    showLineNumbers={false}
+                    code={item.fixedCode}
+                  />
                 </div>
 
                 <div className="inspector-box sarah-gold">
@@ -220,7 +227,9 @@ export default function Step5CodeExplorer({ isCompleted, onCompleteStep }) {
                     <i className="fa-solid fa-microphone" aria-hidden="true"></i>{' '}
                     Phrase prête à dire à Sarah :
                   </h5>
-                  <p>{item.whatToSayToSarah}</p>
+                  <p>
+                    <RichCodeText text={item.whatToSayToSarah} />
+                  </p>
                 </div>
               </div>
             );
@@ -235,10 +244,13 @@ export default function Step5CodeExplorer({ isCompleted, onCompleteStep }) {
         <div className="panel-header">
           <div>
             <span className="panel-kicker">
-              Atelier 3 • Ton code source complet avec numéros de lignes
+              Atelier 3 • Ton code source complet avec coloration syntaxique
             </span>
             <h3>
-              Visionneuse Intégrale : index.html (306 lignes) &amp; style.css (621 lignes)
+              Visionneuse Intégrale :{' '}
+              <code className="code-pill pill-file">index.html</code> (306
+              lignes) &amp; <code className="code-pill pill-file">style.css</code>{' '}
+              (621 lignes)
             </h3>
           </div>
           <div className="segmented-btns">
@@ -265,7 +277,7 @@ export default function Step5CodeExplorer({ isCompleted, onCompleteStep }) {
             .map((line, index) => (
               <div className="source-line" key={index}>
                 <span className="line-num">{index + 1}</span>
-                <span className="line-code">{line}</span>
+                <span className="line-code">{highlightCodeLine(line)}</span>
               </div>
             ))}
         </div>

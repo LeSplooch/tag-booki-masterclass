@@ -6,11 +6,12 @@
 // - Ici on utilise plusieurs états `useState` pour permettre à Tag de modifier
 //   en direct les propriétés CSS (comme `flex-wrap`, `justify-content`,
 //   `object-fit`, `flex-direction`) sur ses vraies cartes d'hôtels Booki !
-// - En React, on peut passer un objet JavaScript à l'attribut `style={{ ... }}`
-//   d'une balise pour appliquer dynamiquement les choix de l'utilisatrice.
+// - Tous les extraits de code petits et grands sont rendus dans des blocs
+//   colorés grâce à `<CodeBlock />` et `<code className="code-pill ...">`.
 // ============================================================================
 
 import React, { useState } from 'react';
+import { CodeBlock } from './CodeHighlighter';
 
 const HEBERGEMENTS_SAMPLE = [
   {
@@ -65,23 +66,15 @@ const POPULAIRES_SAMPLE = [
 
 export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
   // États du simulateur Flexbox pour les 6 cartes Hébergements (lignes 210-252 de style.css)
-  const [flexWrap, setFlexWrap] = useState('wrap'); // 'wrap' (correct) ou 'nowrap' (cassé)
+  const [flexWrap, setFlexWrap] = useState('wrap');
   const [justifyContent, setJustifyContent] = useState('space-between');
   const [cardWidth, setCardWidth] = useState('30%');
-  const [objectFit, setObjectFit] = useState('cover'); // 'cover' (correct) ou 'fill' (déformé)
+  const [objectFit, setObjectFit] = useState('cover');
 
   // États du simulateur pour les cartes horizontales Populaires (lignes 271-294)
-  const [popCardDisplay, setPopCardDisplay] = useState('flex'); // 'flex' vs 'block'
+  const [popCardDisplay, setPopCardDisplay] = useState('flex');
   const [popContentJustify, setPopContentJustify] = useState('space-between');
 
-  // Mini-missions : Tag peut cliquer sur "Casser le CSS" puis sur "Réparer comme dans mon code"
-  const [missionSolved, setMissionSolved] = useState({
-    m1: false,
-    m2: false,
-    m3: false,
-  });
-
-  // Fonction pour simuler un bug précis puis laisser Tag le réparer
   const triggerBug = (bugNumber) => {
     if (bugNumber === 1) {
       setFlexWrap('nowrap');
@@ -97,14 +90,11 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
       setFlexWrap('wrap');
       setCardWidth('30%');
       setJustifyContent('space-between');
-      setMissionSolved((prev) => ({ ...prev, m1: true }));
     } else if (bugNumber === 2) {
       setObjectFit('cover');
-      setMissionSolved((prev) => ({ ...prev, m2: true }));
     } else if (bugNumber === 3) {
       setPopCardDisplay('flex');
       setPopContentJustify('space-between');
-      setMissionSolved((prev) => ({ ...prev, m3: true }));
     }
   };
 
@@ -115,33 +105,42 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
         <div className="context-banner-left">
           <div className="scenario-pill">
             <i className="fa-solid fa-table-columns" aria-hidden="true"></i>
-            <span>Étape 2 (12 min) • Architecture CSS & Flexbox</span>
+            <span>Étape 2 (12 min) • Architecture CSS &amp; Flexbox</span>
           </div>
           <h2>
-            Comprendre ton fichier style.css : Flexbox, Cartes &amp; Images
+            Comprendre ton fichier{' '}
+            <code className="code-pill pill-file">style.css</code> : Flexbox,
+            Cartes &amp; Images
           </h2>
           <p>
-            Dans ton projet, le HTML et le CSS sont séparés : le HTML contient la
-            structure et le CSS gère le visuel. Grâce à la classe{' '}
-            <code>.card</code> (ligne 39 de ton <code>style.css</code>), tu stylises{' '}
+            Dans ton projet, le HTML et le CSS sont séparés :{' '}
+            <code className="code-pill pill-file">index.html</code> contient la
+            structure et <code className="code-pill pill-file">css/style.css</code>{' '}
+            gère le visuel. Grâce à la classe{' '}
+            <code className="code-pill pill-selector">.card</code> (ligne 39 de ton{' '}
+            <code className="code-pill pill-file">style.css</code>), tu stylises{' '}
             <strong>9 cartes d&apos;hôtels d&apos;un seul coup</strong> ! Découvrons
-            ensemble comment tes règles Flexbox alignent tout au pixel près.
+            ensemble comment tes règles{' '}
+            <code className="code-pill pill-css-prop">display: flex</code> alignent
+            tout au pixel près.
           </p>
         </div>
 
         <div className="css-root-box">
-          <div className="css-root-title">Tes variables CSS (Lignes 6–10)</div>
+          <div className="css-root-title">
+            Tes variables <code className="code-pill pill-selector">:root</code> (Lignes 6–10)
+          </div>
           <div className="swatch-row">
             <span className="swatch" style={{ background: '#0065FC' }}></span>
-            <code>--main-color: #0065FC</code>
+            <code className="code-pill pill-css-prop">--main-color: #0065FC;</code>
           </div>
           <div className="swatch-row">
             <span className="swatch" style={{ background: '#F2F2F2' }}></span>
-            <code>--main-bg-color: #F2F2F2</code>
+            <code className="code-pill pill-css-prop">--main-bg-color: #F2F2F2;</code>
           </div>
           <div className="swatch-row">
             <span className="swatch" style={{ background: '#DEEBFF' }}></span>
-            <code>--filter-bg-color: #DEEBFF</code>
+            <code className="code-pill pill-css-prop">--filter-bg-color: #DEEBFF;</code>
           </div>
         </div>
       </div>
@@ -155,7 +154,11 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
             <span className="panel-kicker">
               Laboratoire Interactif 1 • style.css (Lignes 210 à 252)
             </span>
-            <h3>Comment tes 6 cartes Hébergements forment une grille 3 × 2</h3>
+            <h3>
+              Comment tes 6 cartes{' '}
+              <code className="code-pill pill-selector">.hebergements-cards</code>{' '}
+              forment une grille 3 × 2
+            </h3>
           </div>
           <div className="preset-buttons">
             <button
@@ -163,14 +166,14 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
               className="btn-preset danger"
               onClick={() => triggerBug(1)}
             >
-              💥 Tester sans flex-wrap: wrap
+              💥 Tester sans <code className="code-pill pill-css-prop">flex-wrap: wrap</code>
             </button>
             <button
               type="button"
               className="btn-preset danger"
               onClick={() => triggerBug(2)}
             >
-              💥 Tester sans object-fit: cover
+              💥 Tester sans <code className="code-pill pill-css-prop">object-fit: cover</code>
             </button>
             <button
               type="button"
@@ -188,7 +191,8 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
         <div className="flexbox-controls-bar">
           <div className="control-group">
             <label>
-              <code>.hebergements-cards &#123; flex-wrap:</code>
+              <code className="code-pill pill-selector">.hebergements-cards</code>{' '}
+              <code className="code-pill pill-css-prop">flex-wrap:</code>
             </label>
             <div className="segmented-btns">
               {['wrap', 'nowrap'].map((val) => (
@@ -196,12 +200,9 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
                   key={val}
                   type="button"
                   className={flexWrap === val ? 'active' : ''}
-                  onClick={() => {
-                    setFlexWrap(val);
-                    if (val === 'wrap') setMissionSolved((p) => ({ ...p, m1: true }));
-                  }}
+                  onClick={() => setFlexWrap(val)}
                 >
-                  {val} {val === 'wrap' ? '✅' : '⚠️'}
+                  <code>{val}</code> {val === 'wrap' ? '✅' : '⚠️'}
                 </button>
               ))}
             </div>
@@ -209,7 +210,7 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
 
           <div className="control-group">
             <label>
-              <code>justify-content:</code>
+              <code className="code-pill pill-css-prop">justify-content:</code>
             </label>
             <div className="segmented-btns">
               {['space-between', 'flex-start', 'center'].map((val) => (
@@ -219,7 +220,7 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
                   className={justifyContent === val ? 'active' : ''}
                   onClick={() => setJustifyContent(val)}
                 >
-                  {val}
+                  <code>{val}</code>
                 </button>
               ))}
             </div>
@@ -227,7 +228,8 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
 
           <div className="control-group">
             <label>
-              <code>.hebergements-cards a &#123; width:</code>
+              <code className="code-pill pill-selector">.hebergements-cards a</code>{' '}
+              <code className="code-pill pill-css-prop">width:</code>
             </label>
             <div className="segmented-btns">
               {['30%', '48%', '100%'].map((val) => (
@@ -237,7 +239,7 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
                   className={cardWidth === val ? 'active' : ''}
                   onClick={() => setCardWidth(val)}
                 >
-                  {val} {val === '30%' ? '(3 par ligne)' : ''}
+                  <code>{val}</code> {val === '30%' ? '(3/ligne)' : ''}
                 </button>
               ))}
             </div>
@@ -245,7 +247,8 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
 
           <div className="control-group">
             <label>
-              <code>.card img &#123; object-fit:</code>
+              <code className="code-pill pill-selector">.card img</code>{' '}
+              <code className="code-pill pill-css-prop">object-fit:</code>
             </label>
             <div className="segmented-btns">
               {['cover', 'fill', 'contain'].map((val) => (
@@ -253,12 +256,9 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
                   key={val}
                   type="button"
                   className={objectFit === val ? 'active' : ''}
-                  onClick={() => {
-                    setObjectFit(val);
-                    if (val === 'cover') setMissionSolved((p) => ({ ...p, m2: true }));
-                  }}
+                  onClick={() => setObjectFit(val)}
                 >
-                  {val} {val === 'cover' ? '✅' : '⚠️'}
+                  <code>{val}</code> {val === 'cover' ? '✅' : '⚠️'}
                 </button>
               ))}
             </div>
@@ -269,30 +269,36 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
         <div className="live-explanation-banner">
           {flexWrap === 'nowrap' ? (
             <p className="warn-text">
-              <strong>⚠️ Regarde ce qui se passe sans flex-wrap: wrap !</strong> Par
-              défaut en Flexbox, <code>flex-wrap</code> vaut <code>nowrap</code> :
-              les 6 cartes sont forcées de se serrer sur une seule ligne ! En
-              ajoutant <code>flex-wrap: wrap</code> (ligne 220 de ton{' '}
-              <code>style.css</code>) avec <code>width: 30%</code> (ligne 225), 3
-              cartes prennent 90% de la ligne et les 3 suivantes passent proprement à
-              la ligne en dessous.
+              <strong>⚠️ Regarde ce qui se passe sans</strong>{' '}
+              <code className="code-pill pill-css-prop">flex-wrap: wrap</code> ! Par
+              défaut en Flexbox, <code className="code-pill pill-css-prop">flex-wrap: nowrap</code>{' '}
+              force les 6 cartes à s&apos;écraser sur une seule ligne. En ajoutant{' '}
+              <code className="code-pill pill-css-prop">flex-wrap: wrap</code> (ligne 220 de ton{' '}
+              <code className="code-pill pill-file">style.css</code>) avec{' '}
+              <code className="code-pill pill-css-prop">width: 30%</code> (ligne 225), 3
+              cartes prennent 90% de la ligne et les 3 suivantes passent à la ligne !
             </p>
           ) : objectFit !== 'cover' ? (
             <p className="warn-text">
-              <strong>⚠️ Regarde les photos des lits sans object-fit: cover !</strong>{' '}
-              Comme tu as imposé <code>height: 136px</code> et{' '}
-              <code>width: 100%</code> (lignes 211-212), les images sont écrasées ou
-              laissent des bandes blanches. La propriété{' '}
-              <code>object-fit: cover</code> (lignes 47 et 215) recadre
-              automatiquement la photo sans jamais la déformer !
+              <strong>⚠️ Regarde les photos des lits sans</strong>{' '}
+              <code className="code-pill pill-css-prop">object-fit: cover</code> ! Comme tu as
+              imposé <code className="code-pill pill-css-prop">height: 136px</code> et{' '}
+              <code className="code-pill pill-css-prop">width: 100%</code> (lignes 211-212),
+              les images sont écrasées. La propriété{' '}
+              <code className="code-pill pill-css-prop">object-fit: cover</code> (lignes 47 et 215)
+              recadre automatiquement la photo sans jamais la déformer !
             </p>
           ) : (
             <p className="ok-text">
-              <strong>✅ Configuration exacte de ton style.css :</strong>{' '}
-              <code>display: flex; flex-wrap: wrap; justify-content: {justifyContent};</code>{' '}
-              sur <code>.hebergements-cards</code> + <code>width: {cardWidth};</code>{' '}
-              sur chaque lien <code>&lt;a&gt;</code> + <code>object-fit: cover;</code>{' '}
-              sur les images.
+              <strong>✅ Configuration exacte de ton</strong>{' '}
+              <code className="code-pill pill-file">style.css</code> :{' '}
+              <code className="code-pill pill-css-prop">display: flex;</code>{' '}
+              <code className="code-pill pill-css-prop">flex-wrap: {flexWrap};</code>{' '}
+              <code className="code-pill pill-css-prop">justify-content: {justifyContent};</code>{' '}
+              sur <code className="code-pill pill-selector">.hebergements-cards</code> +{' '}
+              <code className="code-pill pill-css-prop">width: {cardWidth};</code> sur chaque{' '}
+              <code className="code-pill pill-html">&lt;a&gt;</code> +{' '}
+              <code className="code-pill pill-css-prop">object-fit: {objectFit};</code> sur les images.
             </p>
           )}
         </div>
@@ -361,7 +367,11 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
             <span className="panel-kicker">
               Laboratoire Interactif 2 • style.css (Lignes 271 à 294)
             </span>
-            <h3>Pourquoi les cartes &laquo; Populaires &raquo; ont l&apos;image à gauche (33% / 67%)</h3>
+            <h3>
+              Pourquoi les cartes{' '}
+              <code className="code-pill pill-selector">.populaires-cards .card</code>{' '}
+              ont l&apos;image à gauche (33% / 67%)
+            </h3>
           </div>
           <div className="preset-buttons">
             <button
@@ -369,14 +379,15 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
               className="btn-preset danger"
               onClick={() => triggerBug(3)}
             >
-              💥 Enlever display: flex sur .card
+              💥 Enlever <code className="code-pill pill-css-prop">display: flex</code> sur{' '}
+              <code className="code-pill pill-selector">.card</code>
             </button>
             <button
               type="button"
               className="btn-preset success"
               onClick={() => fixBug(3)}
             >
-              ✨ Remettre display: flex
+              ✨ Remettre <code className="code-pill pill-css-prop">display: flex</code>
             </button>
           </div>
         </div>
@@ -384,14 +395,18 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
         <div className="pop-explainer-split">
           <div className="pop-controls-col">
             <p>
-              Dans <strong>Hébergements</strong>, l&apos;image est <em>au-dessus</em>{' '}
-              du texte (comportement bloc normal). Mais dans{' '}
-              <strong>Les plus populaires</strong>, Loïc a placé l&apos;image{' '}
-              <strong>à gauche</strong> et le texte <strong>à droite</strong> !
+              Dans <code className="code-pill pill-selector">.hebergements-cards</code>,
+              l&apos;image est <em>au-dessus</em> du texte. Mais dans{' '}
+              <code className="code-pill pill-selector">.populaires-cards .card</code>,
+              Loïc a placé l&apos;image <strong>à gauche</strong> (
+              <code className="code-pill pill-css-prop">width: 33%</code>) et le
+              texte <strong>à droite</strong> (
+              <code className="code-pill pill-css-prop">width: 67%</code>) !
             </p>
             <div className="control-group vertical">
               <label>
-                <code>.populaires-cards .card &#123; display:</code>
+                <code className="code-pill pill-selector">.populaires-cards .card</code>{' '}
+                <code className="code-pill pill-css-prop">display:</code>
               </label>
               <div className="segmented-btns">
                 {['flex', 'block'].map((val) => (
@@ -399,12 +414,10 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
                     key={val}
                     type="button"
                     className={popCardDisplay === val ? 'active' : ''}
-                    onClick={() => {
-                      setPopCardDisplay(val);
-                      if (val === 'flex') setMissionSolved((p) => ({ ...p, m3: true }));
-                    }}
+                    onClick={() => setPopCardDisplay(val)}
                   >
-                    {val} {val === 'flex' ? '✅ (Image à gauche)' : '⚠️ (Image en haut)'}
+                    <code>{val}</code>{' '}
+                    {val === 'flex' ? '✅ (Image à gauche)' : '⚠️ (Image en haut)'}
                   </button>
                 ))}
               </div>
@@ -412,7 +425,8 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
 
             <div className="control-group vertical">
               <label>
-                <code>.populaires-cards .card-content &#123; justify-content:</code>
+                <code className="code-pill pill-selector">.populaires-cards .card-content</code>{' '}
+                <code className="code-pill pill-css-prop">justify-content:</code>
               </label>
               <div className="segmented-btns">
                 {['space-between', 'flex-start'].map((val) => (
@@ -422,7 +436,7 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
                     className={popContentJustify === val ? 'active' : ''}
                     onClick={() => setPopContentJustify(val)}
                   >
-                    {val}{' '}
+                    <code>{val}</code>{' '}
                     {val === 'space-between'
                       ? '✅ (Étoiles poussées en bas)'
                       : '⚠️ (Étoiles collées au prix)'}
@@ -431,12 +445,10 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
               </div>
             </div>
 
-            <div className="code-preview-block">
-              <div className="code-preview-header">
-                <span>Ton code exact dans style.css (Lignes 271–290)</span>
-              </div>
-              <pre tabIndex="0">
-                <code>{`.populaires-cards .card {
+            <CodeBlock
+              title="Ton code exact dans style.css (Lignes 271–290)"
+              lang="CSS"
+              code={`.populaires-cards .card {
     display: ${popCardDisplay};
     margin-top: 33px;
 }
@@ -450,9 +462,8 @@ export default function Step2FlexboxLab({ isCompleted, onCompleteStep }) {
     display: flex;
     flex-direction: column;
     justify-content: ${popContentJustify};
-}`}</code>
-              </pre>
-            </div>
+}`}
+            />
           </div>
 
           <div className="booki-live-section-box pop-preview-box">

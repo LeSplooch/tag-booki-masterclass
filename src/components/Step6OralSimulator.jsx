@@ -11,6 +11,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { PRESENTATION_TIMELINE, SARAH_QUESTIONS } from '../data/courseData';
+import { RichCodeText } from './CodeHighlighter';
 
 export default function Step6OralSimulator({ isCompleted, onCompleteStep }) {
   // 1. États pour le Chronomètre officiel de Soutenance (30 minutes = 1800 secondes)
@@ -48,18 +49,18 @@ export default function Step6OralSimulator({ isCompleted, onCompleteStep }) {
     if (secondsElapsed < 15 * 60) {
       return {
         name: 'Phase 1 : Présentation des livrables (00:00 – 15:00)',
-        color: '#0065FC',
+        color: '#38bdf8',
       };
     }
     if (secondsElapsed < 25 * 60) {
       return {
         name: 'Phase 2 : Discussion & Questions de Sarah (15:00 – 25:00)',
-        color: '#d97706',
+        color: '#fbbf24',
       };
     }
     return {
       name: 'Phase 3 : Débriefing hors jeu de rôle (25:00 – 30:00)',
-      color: '#10b981',
+      color: '#34d399',
     };
   };
 
@@ -172,7 +173,9 @@ export default function Step6OralSimulator({ isCompleted, onCompleteStep }) {
                           }))
                         }
                       />
-                      <span>{itemText}</span>
+                      <span>
+                        <RichCodeText text={itemText} />
+                      </span>
                     </label>
                   );
                 })}
@@ -183,7 +186,9 @@ export default function Step6OralSimulator({ isCompleted, onCompleteStep }) {
                   <i className="fa-solid fa-quote-left" aria-hidden="true"></i>{' '}
                   Exemple de phrase d&apos;accroche à dire à l&apos;oral :
                 </div>
-                <p>{block.speechBubble}</p>
+                <p>
+                  <RichCodeText text={block.speechBubble} />
+                </p>
               </div>
             </div>
           ))}
@@ -243,7 +248,7 @@ export default function Step6OralSimulator({ isCompleted, onCompleteStep }) {
           </div>
 
           <blockquote className="sarah-question-quote">
-            {currentQ.question}
+            <RichCodeText text={currentQ.question} />
           </blockquote>
 
           <div className="sarah-action-buttons">
@@ -296,7 +301,7 @@ export default function Step6OralSimulator({ isCompleted, onCompleteStep }) {
           {showHint && (
             <div className="hint-callout">
               <strong>💡 Indice pour structurer ta réponse :</strong>{' '}
-              {currentQ.hint}
+              <RichCodeText text={currentQ.hint} />
             </div>
           )}
 
@@ -306,18 +311,22 @@ export default function Step6OralSimulator({ isCompleted, onCompleteStep }) {
                 <h5>✅ Les points techniques attendus par l&apos;évaluateur :</h5>
                 <ul className="clean-bullet-list">
                   {currentQ.keyPoints.map((pt) => (
-                    <li key={pt}>{pt}</li>
+                    <li key={pt}>
+                      <RichCodeText text={pt} />
+                    </li>
                   ))}
                 </ul>
                 <div className="code-ref-pill">
                   <strong>📍 Quoi montrer dans ton code VS Code :</strong>{' '}
-                  {currentQ.codeReference}
+                  <RichCodeText text={currentQ.codeReference} />
                 </div>
               </div>
 
               <div className="ideal-speech-box">
                 <h5>🎙️ Réponse modèle formulée naturellement :</h5>
-                <p className="ideal-speech-text">{currentQ.idealAnswer}</p>
+                <p className="ideal-speech-text">
+                  <RichCodeText text={currentQ.idealAnswer} />
+                </p>
               </div>
             </div>
           )}

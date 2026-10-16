@@ -7,13 +7,13 @@
 //   qui retourne du JSX (du HTML enrichi avec du JavaScript entre accolades {}).
 // - Il reçoit des "props" (propriétés) envoyées par son parent `App.jsx` :
 //   ici `onCompleteStep` permet de prévenir le parent quand Tag a terminé l'étape !
-// - Le Hook `useState` permet de créer une "mémoire" locale au composant :
-//   dès que cette mémoire change (ex: quand Tag clique sur une zone du site),
-//   React met automatiquement à jour l'écran sans recharger la page !
+// - Nous utilisons aussi `<CodeBlock />` et `<RichCodeText />` pour afficher
+//   tous les bouts de code dans des blocs colorés (petits ou grands) !
 // ============================================================================
 
 import React, { useState } from 'react';
 import { XRAY_ZONES, SEMANTIC_CHALLENGES } from '../data/courseData';
+import { CodeBlock, RichCodeText } from './CodeHighlighter';
 
 export default function Step1Semantics({ isCompleted, onCompleteStep }) {
   // 1. État (State) pour savoir quelle zone de la maquette Booki est sélectionnée
@@ -23,7 +23,6 @@ export default function Step1Semantics({ isCompleted, onCompleteStep }) {
   const [xrayActive, setXrayActive] = useState(true);
 
   // 3. État pour stocker les réponses de Tag aux 3 mini-défis sémantiques
-  // Exemple : { 'sem-1': 0, 'sem-2': 1 }
   const [answers, setAnswers] = useState({});
 
   // On cherche l'objet complet de la zone actuellement sélectionnée
@@ -61,8 +60,15 @@ export default function Step1Semantics({ isCompleted, onCompleteStep }) {
             <strong>Sarah (la CTO de Booki)</strong>. Tu travailles avec elle et{' '}
             <strong>Loïc (l&apos;UI Designer)</strong> qui a créé les maquettes Figma
             pour permettre aux usagers de trouver des hébergements et des activités
-            à Marseille. Avant d&apos;écrire la moindre ligne de code, un développeur
-            découpe toujours la maquette en <strong>boîtes HTML sémantiques</strong>.
+            à Marseille. Avant d&apos;écrire la moindre ligne dans{' '}
+            <code className="code-pill pill-file">index.html</code> ou{' '}
+            <code className="code-pill pill-file">css/style.css</code>, on découpe
+            toujours la maquette en <strong>boîtes HTML sémantiques</strong> (
+            <code className="code-pill pill-html">&lt;header&gt;</code>,{' '}
+            <code className="code-pill pill-html">&lt;main&gt;</code>,{' '}
+            <code className="code-pill pill-html">&lt;section&gt;</code>,{' '}
+            <code className="code-pill pill-html">&lt;article&gt;</code>,{' '}
+            <code className="code-pill pill-html">&lt;footer&gt;</code>).
           </p>
         </div>
 
@@ -90,8 +96,11 @@ export default function Step1Semantics({ isCompleted, onCompleteStep }) {
       <section className="interactive-panel">
         <div className="panel-header">
           <div>
-            <span className="panel-kicker">Atelier 1 • Étude & Découpe de la Maquette</span>
-            <h3>Scanner Rayons-X de ton fichier index.html</h3>
+            <span className="panel-kicker">Atelier 1 • Étude &amp; Découpe de la Maquette</span>
+            <h3>
+              Scanner Rayons-X de ton fichier{' '}
+              <code className="code-pill pill-file">index.html</code>
+            </h3>
           </div>
           <button
             type="button"
@@ -119,8 +128,8 @@ export default function Step1Semantics({ isCompleted, onCompleteStep }) {
               onClick={() => setSelectedZoneId('main-container')}
             >
               <div className="wf-tag-bar">
-                <code>&lt;div class=&quot;main-container&quot;&gt;</code>
-                <span>max-width: 1440px</span>
+                <code className="code-pill pill-html">&lt;div class=&quot;main-container&quot;&gt;</code>
+                <code className="code-pill pill-css-prop">max-width: 1440px</code>
               </div>
 
               {/* Zone 1 : Header */}
@@ -195,7 +204,9 @@ export default function Step1Semantics({ isCompleted, onCompleteStep }) {
                   <div className="wf-sub-section wf-heb-left">
                     <div className="wf-sub-header">
                       <strong>Hébergements à Marseille</strong>
-                      {xrayActive && <code>&lt;section&gt; 65%</code>}
+                      {xrayActive && (
+                        <code className="code-pill pill-html">&lt;section&gt; 65%</code>
+                      )}
                     </div>
                     <div className="wf-mini-grid">
                       {[
@@ -214,7 +225,7 @@ export default function Step1Semantics({ isCompleted, onCompleteStep }) {
                     </div>
                     {xrayActive && (
                       <div className="wf-code-note">
-                        6x <code>&lt;a&gt;&lt;article class=&quot;card&quot;&gt;</code>
+                        6x <code className="code-pill pill-html">&lt;a&gt;&lt;article class=&quot;card&quot;&gt;</code>
                       </div>
                     )}
                   </div>
@@ -222,7 +233,9 @@ export default function Step1Semantics({ isCompleted, onCompleteStep }) {
                   <div className="wf-sub-section wf-pop-right">
                     <div className="wf-sub-header">
                       <strong>Les plus populaires 📈</strong>
-                      {xrayActive && <code>&lt;section&gt; 32%</code>}
+                      {xrayActive && (
+                        <code className="code-pill pill-html">&lt;section&gt; 32%</code>
+                      )}
                     </div>
                     <div className="wf-mini-col">
                       <div className="wf-mini-horiz">
@@ -307,20 +320,26 @@ export default function Step1Semantics({ isCompleted, onCompleteStep }) {
           {/* COLONNE DROITE : FICHE D'INSPECTION DE LA ZONE SÉLECTIONNÉE */}
           <div className="xray-inspector-card">
             <div className="inspector-badges">
-              <span className="badge-tag">{activeZone.tag}</span>
+              <code className="code-pill pill-html">{activeZone.tag}</code>
               <span className="badge-lines">HTML : {activeZone.linesHtml}</span>
               <span className="badge-lines">CSS : {activeZone.linesCss}</span>
             </div>
 
-            <h4>{activeZone.title}</h4>
-            <p className="inspector-role">{activeZone.role}</p>
+            <h4>
+              <RichCodeText text={activeZone.title} />
+            </h4>
+            <p className="inspector-role">
+              <RichCodeText text={activeZone.role} />
+            </p>
 
             <div className="inspector-box semantic-why">
               <h5>
                 <i className="fa-solid fa-code" aria-hidden="true"></i> Pourquoi cette balise
                 sémantique ?
               </h5>
-              <p>{activeZone.whyThisTag}</p>
+              <p>
+                <RichCodeText text={activeZone.whyThisTag} />
+              </p>
             </div>
 
             <div className="inspector-box sarah-gold">
@@ -328,17 +347,16 @@ export default function Step1Semantics({ isCompleted, onCompleteStep }) {
                 <i className="fa-solid fa-comments" aria-hidden="true"></i> Ce qu&apos;il faut
                 dire à Sarah (CTO) :
               </h5>
-              <p>{activeZone.sarahTip}</p>
+              <p>
+                <RichCodeText text={activeZone.sarahTip} />
+              </p>
             </div>
 
-            <div className="code-preview-block">
-              <div className="code-preview-header">
-                <span>Extrait de ton vrai code Booki</span>
-              </div>
-              <pre tabIndex="0">
-                <code>{activeZone.codeSnippet}</code>
-              </pre>
-            </div>
+            <CodeBlock
+              code={activeZone.codeSnippet}
+              title="Extrait de ton vrai code Booki"
+              lang="HTML / CSS"
+            />
           </div>
         </div>
       </section>
@@ -350,7 +368,10 @@ export default function Step1Semantics({ isCompleted, onCompleteStep }) {
         <div className="panel-header">
           <div>
             <span className="panel-kicker">Atelier 2 • Vérifie ta compréhension</span>
-            <h3>Défi Pratique : Les 3 secrets de ton fichier index.html</h3>
+            <h3>
+              Défi Pratique : Les 3 secrets de ton fichier{' '}
+              <code className="code-pill pill-file">index.html</code>
+            </h3>
           </div>
           <div className="score-pill">
             Score : <strong>{correctCount} / {SEMANTIC_CHALLENGES.length}</strong>
@@ -364,7 +385,9 @@ export default function Step1Semantics({ isCompleted, onCompleteStep }) {
             return (
               <div className="challenge-card" key={ch.id}>
                 <div className="challenge-number">Question {idx + 1}</div>
-                <p className="challenge-q">{ch.question}</p>
+                <p className="challenge-q">
+                  <RichCodeText text={ch.question} />
+                </p>
                 <div className="challenge-options">
                   {ch.options.map((opt, optIdx) => {
                     const isSelected = picked === optIdx;
@@ -382,7 +405,9 @@ export default function Step1Semantics({ isCompleted, onCompleteStep }) {
                         <span className="option-letter">
                           {String.fromCharCode(65 + optIdx)}
                         </span>
-                        <span>{opt.label}</span>
+                        <span>
+                          <RichCodeText text={opt.label} />
+                        </span>
                       </button>
                     );
                   })}
@@ -399,7 +424,9 @@ export default function Step1Semantics({ isCompleted, onCompleteStep }) {
                       }`}
                       aria-hidden="true"
                     ></i>
-                    <span>{pickedObj.feedback}</span>
+                    <span>
+                      <RichCodeText text={pickedObj.feedback} />
+                    </span>
                   </div>
                 )}
               </div>
